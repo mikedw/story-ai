@@ -60,10 +60,10 @@ if st.button("Ask"):
     joined_chunks = "\n".join(chunks)
 
     # Write the selected chunks into the UI
-    with st.expander("Relevant material"):
-        for i, t in enumerate(chunks):
-            t = t.replace("\n", " ")
-            st.write("Chunk ", i, " - ", t)
+    # with st.expander("Relevant material"):
+    #     for i, t in enumerate(chunks):
+    #         t = t.replace("\n", " ")
+    #         st.write("Chunk ", i, " - ", t)
     
     with st.spinner("Summarizing..."):
         try:
