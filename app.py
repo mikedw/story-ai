@@ -69,8 +69,7 @@ if st.button("Ask"):
         try:
             # Build the prompt
             prompt = f"""
-            Answer the following question based on the context below.
-            If you don't know the answer, just say that you don't know. Don't try to make up an answer. Do not answer beyond this context.
+            Answer the following question based on the context below. Don't try to make up an answer. Do not answer beyond this context.
             ---
             QUESTION: {query}                                            
             ---
