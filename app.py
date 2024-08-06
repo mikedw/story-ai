@@ -21,7 +21,7 @@ if os.getenv('OPENAI_API_KEY') is None:
     st.error("OPENAI_API_KEY not set. Please set this environment variable and restart the app.")
 
 st.title("Story AI prototype")
-query = st.text_input("Share a story from your day")
+query = st.text_area("Share a story from your day")
 
 if st.button("Get feedback"):
    
