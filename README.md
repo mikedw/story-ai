@@ -1,1 +1,1 @@
-# AI handbook trained on Power of Story course materials
+# AI story bot

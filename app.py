@@ -20,10 +20,10 @@ if os.getenv('GPT_MODEL_NAME') is None:
 if os.getenv('OPENAI_API_KEY') is None:
     st.error("OPENAI_API_KEY not set. Please set this environment variable and restart the app.")
 
-st.title("Power of Story - AI handbook")
-query = st.text_input("What do you want to know about the course material?")
+st.title("Story AI prototype")
+query = st.text_input("Share a story from your day")
 
-if st.button("Ask"):
+if st.button("Get feedback"):
    
     # # get Pinecone API environment variables
     pinecone_api = os.getenv('PINECONE_API_KEY')
@@ -68,10 +68,18 @@ if st.button("Ask"):
     with st.spinner("Summarizing..."):
         try:
             # Build the prompt
+            # prompt = f"""
+            # Answer the following question based on the context below. Don't try to make up an answer. Do not answer beyond this context.
+            # ---
+            # QUESTION: {query}                                            
+            # ---
+            # CONTEXT:
+            # {joined_chunks}
+            """
             prompt = f"""
-            Answer the following question based on the context below. Don't try to make up an answer. Do not answer beyond this context.
+            Provide feedback on the shared story, try to suggest improvements and learning points from context below. Keep response less than 200 words.
             ---
-            QUESTION: {query}                                            
+            STORY: {query}                                            
             ---
             CONTEXT:
             {joined_chunks}
@@ -89,7 +97,7 @@ if st.button("Ask"):
             )
  
             # Write query answer
-            st.markdown("### Answer:")
+            st.markdown("### Feedback:")
             st.write(response.choices[0].message.content)
    
    
