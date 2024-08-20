@@ -21,6 +21,29 @@ if os.getenv('OPENAI_API_KEY') is None:
     st.error("OPENAI_API_KEY not set. Please set this environment variable and restart the app.")
 
 st.title("Story AI prototype")
+
+st.header("Customizing LLM prompt")
+default_prompt_instruction = """Provide feedback on the shared story, try to suggest improvements and learning points from the provided context. Keep response less than 200 words. 
+
+-------
+STORY: {story_from_user}                                            
+-------
+CONTEXT: {course_context}
+"""
+
+prompt = default_prompt_instruction   
+
+sidebar = st.sidebar
+with sidebar:
+    st.text("Customize prompt instrutions")
+    current_prompt = st.empty()
+    current_prompt.text_area(label="Add your custom prompt", value=prompt, height=300, key="1")
+    if st.button("Reset", type="primary"):
+         prompt = default_prompt_instruction
+         current_prompt.text_area(label="Add your custom prompt", value=prompt, height=300, key="2")
+
+st.header("Story input from user")
+
 query = st.text_area("Share a story to get feedback on how to improve it.")
 
 if st.button("Get feedback"):
@@ -76,14 +99,14 @@ if st.button("Get feedback"):
             # CONTEXT:
             # {joined_chunks}
             # """
-            prompt = f"""
-            Provide feedback on the shared story, try to suggest improvements and learning points from context below. Keep response less than 200 words.
-            ---
-            STORY: {query}                                            
-            ---
-            CONTEXT:
-            {joined_chunks}
-            """
+            # prompt = f"""
+            # Provide feedback on the shared story, try to suggest improvements and learning points from context below. Keep response less than 200 words.
+            # ---
+            # STORY: {query}                                            
+            # ---
+            # CONTEXT:
+            # {joined_chunks}
+            # """
  
             # Run chat completion using GPT-4
             response = openai.chat.completions.create(
