@@ -107,6 +107,9 @@ if st.button("Get feedback"):
             # CONTEXT:
             # {joined_chunks}
             # """
+
+            prompt.replace("{story_from_user}", query)
+            prompt.replace("{course_context}", joined_chunks)
  
             # Run chat completion using GPT-4
             response = openai.chat.completions.create(
