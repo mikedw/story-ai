@@ -23,7 +23,7 @@ if os.getenv('OPENAI_API_KEY') is None:
 st.title("Story AI prototype")
 
 st.header("Customizing LLM prompt")
-default_prompt_instruction = """Provide feedback on the shared story, try to suggest improvements and learning points from the provided context. Keep response less than 200 words. 
+default_prompt_instruction = """You are a storytelling feedback  assistant. You will first evaluate the provided story without the context, and determine if it has or implies an arc with a beginning, middle, and end. If so, suggest improvements and learning points from the provided context.  Keep response less than 250 words.
 
 -------
 STORY: {story_from_user}                                            
@@ -31,22 +31,20 @@ STORY: {story_from_user}
 CONTEXT: {course_context}
 """
 
-prompt = default_prompt_instruction   
-
 sidebar = st.sidebar
 with sidebar:
     st.text("Customize prompt instrutions")
     current_prompt = st.empty()
-    current_prompt.text_area(label="Add your custom prompt", value=prompt, height=300, key="1")
+    prompt = current_prompt.text_area(label="Add your custom prompt", value=default_prompt_instruction, height=300, key="1")
     if st.button("Reset", type="primary"):
          prompt = default_prompt_instruction
-         current_prompt.text_area(label="Add your custom prompt", value=prompt, height=300, key="2")
+         promtpt = current_prompt.text_area(label="Add your custom prompt", value=default_prompt_instruction, height=300, key="2")
 
 st.header("Story input from user")
 
-query = st.text_area("Share a story to get feedback on how to improve it.")
+query = st.text_area("Share a story to get feedback on how to improve it.", height=300)
 
-if st.button("Get feedback"):
+if st.button("Get feedback") or query:
    
     # # get Pinecone API environment variables
     pinecone_api = os.getenv('PINECONE_API_KEY')
@@ -90,32 +88,14 @@ if st.button("Get feedback"):
     
     with st.spinner("Summarizing..."):
         try:
-            # Build the prompt
-            # prompt = f"""
-            # Answer the following question based on the context below. Don't try to make up an answer. Do not answer beyond this context.
-            # ---
-            # QUESTION: {query}                                            
-            # ---
-            # CONTEXT:
-            # {joined_chunks}
-            # """
-            # prompt = f"""
-            # Provide feedback on the shared story, try to suggest improvements and learning points from context below. Keep response less than 200 words.
-            # ---
-            # STORY: {query}                                            
-            # ---
-            # CONTEXT:
-            # {joined_chunks}
-            # """
-
-            prompt.replace("{story_from_user}", query)
-            prompt.replace("{course_context}", joined_chunks)
+            prompt = prompt.replace("{story_from_user}", query)
+            prompt = prompt.replace("{course_context}", joined_chunks)
  
             # Run chat completion using GPT-4
             response = openai.chat.completions.create(
                 model=gpt_model_name,
                 messages=[
-                    { "role": "system", "content":  "You are a Q&A assistant." },
+                    { "role": "system", "content":  "You are an assistant providing feedback on stories." },
                     { "role": "user", "content": prompt }
                 ],
                 temperature=0.7,
